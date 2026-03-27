@@ -39,7 +39,7 @@
     "type": "git",
     "url": "git+https://github.com/AndrewAntoshkin/spektr.git"
   },
-  "homepage": "https://github.com/AndrewAntoshkin/spektr#readme",
+  "homepage": "https://antoshkin.tech/spektr",
   "keywords": [
     "react",
     "design-system",

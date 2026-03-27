@@ -12,104 +12,127 @@ export interface SpektrProps {
   children: React.ReactNode;
   /** Enable/disable the overlay. Default: true */
   enabled?: boolean;
-  /** Key to hold for inspection. Default: "Alt" */
-  hotkey?: string;
 }
 
-export function Spektr({
-  children,
-  enabled = true,
-  hotkey = "Alt",
-}: SpektrProps) {
+export function Spektr({ children, enabled = true }: SpektrProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hotkeyPressed, setHotkeyPressed] = useState(false);
+  const [active, setActive] = useState(false);
   const [target, setTarget] = useState<Element | null>(null);
   const [specs, setSpecs] = useState<ElementSpecs | null>(null);
   const [pinned, setPinned] = useState(false);
-  const rafRef = useRef<number>(0);
+  const lastMousePos = useRef<{ x: number; y: number } | null>(null);
 
+  const inspect = useCallback(
+    (x: number, y: number) => {
+      if (!enabled || pinned) return;
+      const el = document.elementFromPoint(x, y);
+      if (!el || el === containerRef.current) {
+        setTarget(null);
+        setSpecs(null);
+        return;
+      }
+      setTarget(el);
+      setSpecs(computeSpecs(el));
+    },
+    [enabled, pinned]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (!enabled) return;
+
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+      const isAlt = e.altKey;
+      setActive(isAlt);
+
+      if (!isAlt && !pinned) {
+        setTarget(null);
+        setSpecs(null);
+        return;
+      }
+
+      if (isAlt && !pinned) {
+        inspect(e.clientX, e.clientY);
+      }
+    },
+    [enabled, pinned, inspect]
+  );
+
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (!e.altKey || !enabled) return;
+      if (target) {
+        e.preventDefault();
+        e.stopPropagation();
+        setPinned((p) => {
+          if (p) {
+            setTarget(null);
+            setSpecs(null);
+          }
+          return !p;
+        });
+      }
+    },
+    [enabled, target]
+  );
+
+  // When Alt is pressed while mouse is stationary, start inspecting
   useEffect(() => {
     if (!enabled) return;
 
-    const onDown = (e: KeyboardEvent) => {
-      if (e.key === hotkey) setHotkeyPressed(true);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Alt" && lastMousePos.current) {
+        setActive(true);
+        inspect(lastMousePos.current.x, lastMousePos.current.y);
+      }
     };
-    const onUp = (e: KeyboardEvent) => {
-      if (e.key === hotkey) {
-        setHotkeyPressed(false);
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "Alt") {
+        setActive(false);
         if (!pinned) {
           setTarget(null);
           setSpecs(null);
         }
       }
     };
-    const onBlur = () => {
-      setHotkeyPressed(false);
-      if (!pinned) {
-        setTarget(null);
-        setSpecs(null);
-      }
-    };
 
-    window.addEventListener("keydown", onDown);
-    window.addEventListener("keyup", onUp);
-    window.addEventListener("blur", onBlur);
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
     return () => {
-      window.removeEventListener("keydown", onDown);
-      window.removeEventListener("keyup", onUp);
-      window.removeEventListener("blur", onBlur);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
     };
-  }, [enabled, hotkey, pinned]);
+  }, [enabled, pinned, inspect]);
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!hotkeyPressed || !enabled || pinned) return;
-
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        const el = document.elementFromPoint(e.clientX, e.clientY);
-        if (!el || el === containerRef.current) {
-          setTarget(null);
-          setSpecs(null);
-          return;
-        }
-        if (el === target) return;
-        setTarget(el);
-        setSpecs(computeSpecs(el));
-      });
-    },
-    [hotkeyPressed, enabled, pinned, target]
-  );
-
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (!hotkeyPressed || !enabled) return;
-      if (target) {
-        e.preventDefault();
-        e.stopPropagation();
-        setPinned((p) => !p);
-      }
-    },
-    [hotkeyPressed, enabled, target]
-  );
+  // Handle mouse leaving the window
+  const handleMouseLeave = useCallback(() => {
+    setActive(false);
+    lastMousePos.current = null;
+    if (!pinned) {
+      setTarget(null);
+      setSpecs(null);
+    }
+  }, [pinned]);
 
   useEffect(() => {
     if (!enabled) {
       setTarget(null);
       setSpecs(null);
       setPinned(false);
+      setActive(false);
     }
   }, [enabled]);
 
-  const showOverlay = enabled && specs && target && (hotkeyPressed || pinned);
+  const showOverlay = enabled && specs && target && (active || pinned);
 
   return (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onClickCapture={handleClick}
       style={{
-        cursor: hotkeyPressed && enabled ? "crosshair" : undefined,
+        cursor: active && enabled ? "crosshair" : undefined,
       }}
     >
       {children}

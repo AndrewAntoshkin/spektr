@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   type ElementSpecs,
   formatColor,
@@ -11,44 +11,31 @@ interface OverlayProps {
   target: Element;
 }
 
-const BLUE = "rgba(59, 130, 246, 0.5)";
 const GREEN = "rgba(34, 197, 94, 0.25)";
 const ORANGE = "rgba(251, 146, 60, 0.25)";
 const BORDER = "rgba(59, 130, 246, 0.8)";
 
-export function Overlay({ specs, target }: OverlayProps) {
-  const [pos, setPos] = useState(getPosition(specs));
-
-  useEffect(() => {
-    const update = () => setPos(getPosition(specs));
-    window.addEventListener("scroll", update, true);
-    window.addEventListener("resize", update);
-    return () => {
-      window.removeEventListener("scroll", update, true);
-      window.removeEventListener("resize", update);
-    };
-  }, [specs]);
-
+export function Overlay({ specs }: OverlayProps) {
   const { rect, padding, margin } = specs;
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
+  const sx = window.scrollX;
+  const sy = window.scrollY;
 
   const bgColor = formatColor(specs.backgroundColor);
   const textColor = formatColor(specs.color);
+  const tooltipPos = getPosition(specs);
 
   return (
     <>
-      {/* Margin overlay */}
+      {/* Margin */}
       {hasMeaningfulValue(margin) && (
         <div
           style={{
             ...abs,
-            top: rect.top + scrollY - margin.top,
-            left: rect.left + scrollX - margin.left,
+            top: rect.top + sy - margin.top,
+            left: rect.left + sx - margin.left,
             width: rect.width + margin.left + margin.right,
             height: rect.height + margin.top + margin.bottom,
             background: ORANGE,
-            pointerEvents: "none",
           }}
         />
       )}
@@ -57,69 +44,28 @@ export function Overlay({ specs, target }: OverlayProps) {
       <div
         style={{
           ...abs,
-          top: rect.top + scrollY,
-          left: rect.left + scrollX,
+          top: rect.top + sy,
+          left: rect.left + sx,
           width: rect.width,
           height: rect.height,
           border: `1px solid ${BORDER}`,
-          pointerEvents: "none",
         }}
       />
 
-      {/* Padding overlay */}
+      {/* Padding */}
       {hasMeaningfulValue(padding) && (
         <>
           {padding.top > 0 && (
-            <div
-              style={{
-                ...abs,
-                top: rect.top + scrollY,
-                left: rect.left + scrollX,
-                width: rect.width,
-                height: padding.top,
-                background: GREEN,
-                pointerEvents: "none",
-              }}
-            />
+            <div style={{ ...abs, top: rect.top + sy, left: rect.left + sx, width: rect.width, height: padding.top, background: GREEN }} />
           )}
           {padding.bottom > 0 && (
-            <div
-              style={{
-                ...abs,
-                top: rect.bottom + scrollY - padding.bottom,
-                left: rect.left + scrollX,
-                width: rect.width,
-                height: padding.bottom,
-                background: GREEN,
-                pointerEvents: "none",
-              }}
-            />
+            <div style={{ ...abs, top: rect.bottom + sy - padding.bottom, left: rect.left + sx, width: rect.width, height: padding.bottom, background: GREEN }} />
           )}
           {padding.left > 0 && (
-            <div
-              style={{
-                ...abs,
-                top: rect.top + scrollY + padding.top,
-                left: rect.left + scrollX,
-                width: padding.left,
-                height: rect.height - padding.top - padding.bottom,
-                background: GREEN,
-                pointerEvents: "none",
-              }}
-            />
+            <div style={{ ...abs, top: rect.top + sy + padding.top, left: rect.left + sx, width: padding.left, height: rect.height - padding.top - padding.bottom, background: GREEN }} />
           )}
           {padding.right > 0 && (
-            <div
-              style={{
-                ...abs,
-                top: rect.top + scrollY + padding.top,
-                left: rect.right + scrollX - padding.right,
-                width: padding.right,
-                height: rect.height - padding.top - padding.bottom,
-                background: GREEN,
-                pointerEvents: "none",
-              }}
-            />
+            <div style={{ ...abs, top: rect.top + sy + padding.top, left: rect.right + sx - padding.right, width: padding.right, height: rect.height - padding.top - padding.bottom, background: GREEN }} />
           )}
         </>
       )}
@@ -128,9 +74,9 @@ export function Overlay({ specs, target }: OverlayProps) {
       <div
         style={{
           ...abs,
-          ...tooltipBase,
-          top: rect.top + scrollY - 24,
-          left: rect.left + scrollX,
+          ...mono,
+          top: rect.top + sy - 24,
+          left: rect.left + sx,
           background: "rgba(59, 130, 246, 0.9)",
           color: "#fff",
           fontSize: "11px",
@@ -146,12 +92,11 @@ export function Overlay({ specs, target }: OverlayProps) {
       <div
         style={{
           ...abs,
-          ...pos,
+          ...tooltipPos,
           background: "#1a1a1a",
           color: "#e5e5e5",
           fontSize: "12px",
-          fontFamily:
-            'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
+          fontFamily: mono.fontFamily,
           lineHeight: "1.5",
           padding: "10px 12px",
           borderRadius: "8px",
@@ -159,19 +104,14 @@ export function Overlay({ specs, target }: OverlayProps) {
           boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
           maxWidth: "320px",
           zIndex: 2147483647,
-          pointerEvents: "none",
           whiteSpace: "nowrap",
         }}
       >
-        {/* Tag */}
         <div style={{ color: "#93c5fd", marginBottom: "6px" }}>
           <span style={{ fontWeight: 600 }}>&lt;{specs.tagName}&gt;</span>
-          {specs.id && (
-            <span style={{ color: "#fbbf24" }}> #{specs.id}</span>
-          )}
+          {specs.id && <span style={{ color: "#fbbf24" }}> #{specs.id}</span>}
         </div>
 
-        {/* Typography */}
         <Section label="Typography">
           <Row label="font" value={`${specs.fontSize} / ${specs.lineHeight}`} />
           <Row label="weight" value={specs.fontWeight} />
@@ -183,20 +123,14 @@ export function Overlay({ specs, target }: OverlayProps) {
           )}
         </Section>
 
-        {/* Spacing */}
         {(hasMeaningfulValue(padding) || hasMeaningfulValue(margin)) && (
           <Section label="Spacing">
-            {hasMeaningfulValue(padding) && (
-              <Row label="padding" value={formatSides(padding)} />
-            )}
-            {hasMeaningfulValue(margin) && (
-              <Row label="margin" value={formatSides(margin)} />
-            )}
+            {hasMeaningfulValue(padding) && <Row label="padding" value={formatSides(padding)} />}
+            {hasMeaningfulValue(margin) && <Row label="margin" value={formatSides(margin)} />}
             {specs.gap && <Row label="gap" value={specs.gap} />}
           </Section>
         )}
 
-        {/* Visual */}
         {(bgColor || specs.borderRadius !== "0px" || specs.boxShadow) && (
           <Section label="Visual">
             {bgColor && (
@@ -204,43 +138,24 @@ export function Overlay({ specs, target }: OverlayProps) {
                 <Swatch color={bgColor.hex} />
               </Row>
             )}
-            {specs.borderRadius !== "0px" && (
-              <Row label="radius" value={specs.borderRadius} />
-            )}
+            {specs.borderRadius !== "0px" && <Row label="radius" value={specs.borderRadius} />}
             {specs.boxShadow && <Row label="shadow" value="present" />}
           </Section>
         )}
 
-        {/* Layout */}
         <Section label="Layout">
           <Row label="display" value={specs.display} />
-          {specs.position !== "static" && (
-            <Row label="position" value={specs.position} />
-          )}
+          {specs.position !== "static" && <Row label="position" value={specs.position} />}
         </Section>
       </div>
     </>
   );
 }
 
-function Section({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: "6px" }}>
-      <div
-        style={{
-          fontSize: "10px",
-          textTransform: "uppercase",
-          color: "#737373",
-          letterSpacing: "0.05em",
-          marginBottom: "2px",
-        }}
-      >
+      <div style={{ fontSize: "10px", textTransform: "uppercase", color: "#737373", letterSpacing: "0.05em", marginBottom: "2px" }}>
         {label}
       </div>
       {children}
@@ -248,15 +163,7 @@ function Section({
   );
 }
 
-function Row({
-  label,
-  value,
-  children,
-}: {
-  label: string;
-  value: string;
-  children?: React.ReactNode;
-}) {
+function Row({ label, value, children }: { label: string; value: string; children?: React.ReactNode }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
       <span style={{ color: "#a3a3a3", minWidth: "52px" }}>{label}</span>
@@ -284,29 +191,26 @@ function Swatch({ color }: { color: string }) {
 
 function getPosition(specs: ElementSpecs): React.CSSProperties {
   const { rect } = specs;
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
-  const gap = 8;
+  const sx = window.scrollX;
+  const sy = window.scrollY;
+  const gap = 10;
+  const tooltipW = 280;
+  const tooltipH = 220;
 
-  const fitsRight = rect.right + gap + 320 < window.innerWidth;
-  const fitsBelow = rect.bottom + gap + 200 < window.innerHeight;
+  const fitsRight = rect.right + gap + tooltipW < window.innerWidth;
+  const fitsLeft = rect.left - gap - tooltipW > 0;
+  const fitsBelow = rect.bottom + gap + tooltipH < window.innerHeight;
 
   if (fitsRight) {
-    return {
-      top: rect.top + scrollY,
-      left: rect.right + scrollX + gap,
-    };
+    return { top: rect.top + sy, left: rect.right + sx + gap };
+  }
+  if (fitsLeft) {
+    return { top: rect.top + sy, left: rect.left + sx - gap - tooltipW };
   }
   if (fitsBelow) {
-    return {
-      top: rect.bottom + scrollY + gap,
-      left: rect.left + scrollX,
-    };
+    return { top: rect.bottom + sy + gap, left: rect.left + sx };
   }
-  return {
-    top: rect.top + scrollY,
-    left: Math.max(4, rect.left + scrollX - 320 - gap),
-  };
+  return { top: Math.max(4, rect.top + sy - tooltipH - gap), left: rect.left + sx };
 }
 
 const abs: React.CSSProperties = {
@@ -314,6 +218,6 @@ const abs: React.CSSProperties = {
   pointerEvents: "none",
 };
 
-const tooltipBase: React.CSSProperties = {
+const mono: React.CSSProperties = {
   fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
 };

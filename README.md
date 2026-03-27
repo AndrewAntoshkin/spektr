@@ -52,7 +52,6 @@ Then hold **Alt** and hover any element.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `enabled` | `boolean` | `true` | Enable/disable the overlay |
-| `hotkey` | `string` | `"Alt"` | Key to hold for inspection |
 | `children` | `ReactNode` | — | Your app content |
 
 ## How it works
@@ -67,7 +66,7 @@ No CSS files needed — all styles are inline.
 - No CSS imports required
 - TypeScript support with full type exports
 - Portal-based overlay (no z-index conflicts)
-- Throttled via `requestAnimationFrame`
+- Works with Alt key (Option on Mac)
 - Pin/unpin inspections
 - Responsive tooltip positioning
 - Box model visualization (padding, margin, dimensions)

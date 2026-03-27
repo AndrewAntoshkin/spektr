@@ -13,16 +13,20 @@
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: #0a0a0a;
+            background: #1c1c1b;
             color: #e5e5e5;
             -webkit-font-smoothing: antialiased;
         }
 
         #root {
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        }
+
+        button, [role="button"] {
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        button:active, [role="button"]:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
