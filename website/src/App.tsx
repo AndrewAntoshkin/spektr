@@ -43,7 +43,10 @@ export function App() {
       <div style={S.shell}>
         <nav style={S.sidebar} className={`mobile-sidebar${menuOpen ? " open" : ""}`}>
           <div style={S.sidebarInner}>
-            <a href="#" onClick={go("getting-started")} style={S.brand}>Spektr</a>
+            <div style={S.brandRow}>
+              <a href="https://antoshkin.tech" style={S.backBtn} aria-label="Back"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></a>
+              <a href="#" onClick={go("getting-started")} style={S.brand}>Spektr</a>
+            </div>
             <p style={S.byline}>by <a href="https://antoshkin.tech" target="_blank" rel="noopener" style={S.bylineLink}>Andrew Antoshkin</a></p>
             <div style={S.navSection}>
               <p style={S.navLabel}>Basics</p>
@@ -548,6 +551,8 @@ const S: Record<string, React.CSSProperties> = {
     overflowY: "auto",
   },
   sidebarInner: { flex: 1 },
+  brandRow: { display: "flex", alignItems: "center", gap: 8 },
+  backBtn: { display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, border: "1px solid #444", borderRadius: 4, background: "transparent", color: "#e5e5e5", textDecoration: "none", flexShrink: 0 },
   brand: { fontSize: 14, fontWeight: 500, color: "#e5e5e5", textDecoration: "none", display: "block" },
   byline: { fontSize: 12, color: "#6b6b6b", marginBottom: 24, marginTop: 1 },
   bylineLink: { color: "#888", textDecoration: "none" },
