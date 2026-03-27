@@ -1,5 +1,5 @@
 {
-  "name": "spektr",
+  "name": "@andrewaitken/spektr",
   "version": "0.1.0",
   "description": "Design spec overlay for React. Alt+hover any element to inspect spacing, typography, colors.",
   "type": "module",

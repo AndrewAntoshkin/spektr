@@ -38,10 +38,10 @@ export function App() {
             <div style={S.navSection}>
               <p style={S.navLabel}>Links</p>
               <a href="https://github.com/AndrewAntoshkin/spektr" target="_blank" rel="noopener" style={S.navItem}>GitHub</a>
-              <a href="https://www.npmjs.com/package/spektr" target="_blank" rel="noopener" style={S.navItem}>npm</a>
+              <a href="https://www.npmjs.com/package/@andrewaitken/spektr" target="_blank" rel="noopener" style={S.navItem}>npm</a>
             </div>
           </div>
-          <code style={S.sidebarInstall}>npm i spektr</code>
+          <code style={S.sidebarInstall}>npm i @andrewaitken/spektr</code>
         </nav>
         <div style={{ width: 240, flexShrink: 0 }} />
         <main style={S.main}>
@@ -66,12 +66,12 @@ function GettingStarted({ onNext }: { onNext: (e: React.MouseEvent) => void }) {
 
       <Sect title="Installation">
         <p style={S.body}>Install via your package manager.</p>
-        <Pre code="npm i spektr" />
+        <Pre code="npm i @andrewaitken/spektr" />
       </Sect>
 
       <Sect title="Quick Start">
         <p style={S.body}>Wrap your app with <code style={S.ic}>&lt;Spektr&gt;</code>. Then hold <kbd style={S.kbd}>Alt</kbd> (Option on Mac) and hover any element.</p>
-        <Pre code={`import { Spektr } from 'spektr';
+        <Pre code={`import { Spektr } from '@andrewaitken/spektr';
 
 function App() {
   return (
@@ -99,7 +99,7 @@ function App() {
       <Sect title="Development Only">
         <p style={S.body}>Use the <code style={S.ic}>enabled</code> prop to disable Spektr in production.</p>
         <Pre code={`<Spektr enabled={process.env.NODE_ENV === 'development'}>
-  <App />
+  <YourApp />
 </Spektr>`} />
       </Sect>
 
@@ -125,7 +125,7 @@ function ApiPage({ onPrev, onNext }: { onPrev: (e: React.MouseEvent) => void; on
 
       <Sect title="Anatomy">
         <p style={S.body}>Import the wrapper and add it around any part of your tree.</p>
-        <Pre code={`import { Spektr } from 'spektr';
+        <Pre code={`import { Spektr } from '@andrewaitken/spektr';
 
 export function App() {
   return (
@@ -154,7 +154,7 @@ export function App() {
 
       <Sect title="computeSpecs(el)">
         <p style={S.body}>Extracts all visual properties from a DOM element using <code style={S.ic}>getComputedStyle()</code> and <code style={S.ic}>getBoundingClientRect()</code>.</p>
-        <Pre code={`import { computeSpecs } from 'spektr';
+        <Pre code={`import { computeSpecs } from '@andrewaitken/spektr';
 
 const el = document.querySelector('.my-button');
 const specs = computeSpecs(el);

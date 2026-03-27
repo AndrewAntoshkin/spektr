@@ -5,7 +5,7 @@ Design spec overlay for React. Hold Alt and hover any element to inspect spacing
 ## Installation
 
 ```bash
-npm i spektr
+npm i @andrewaitken/spektr
 ```
 
 Requires **React 18+**.
@@ -15,7 +15,7 @@ Requires **React 18+**.
 Wrap your app (or any section) with `<Spektr>`:
 
 ```tsx
-import { Spektr } from 'spektr';
+import { Spektr } from '@andrewaitken/spektr';
 
 function App() {
   return (
@@ -43,7 +43,7 @@ Then hold **Alt** and hover any element.
 
 ```tsx
 <Spektr enabled={process.env.NODE_ENV === 'development'}>
-  <App />
+  <YourApp />
 </Spektr>
 ```
 
@@ -75,13 +75,13 @@ No CSS files needed — all styles are inline.
 
 ```tsx
 // Component
-import { Spektr } from 'spektr';
+import { Spektr } from '@andrewaitken/spektr';
 
 // Utilities (for custom integrations)
-import { computeSpecs, formatColor, formatSides, hasMeaningfulValue } from 'spektr';
+import { computeSpecs, formatColor, formatSides, hasMeaningfulValue } from '@andrewaitken/spektr';
 
 // Types
-import type { SpektrProps, ElementSpecs, BoxSides } from 'spektr';
+import type { SpektrProps, ElementSpecs, BoxSides } from '@andrewaitken/spektr';
 ```
 
 ## Development
