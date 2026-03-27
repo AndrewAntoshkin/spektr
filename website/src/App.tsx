@@ -7,20 +7,41 @@ type Page = "getting-started" | "api" | "examples";
 
 export function App() {
   const [page, setPage] = useState<Page>("getting-started");
-  const go = (p: Page) => (e: React.MouseEvent) => { e.preventDefault(); setPage(p); window.scrollTo(0, 0); };
+  const [activeExample, setActiveExample] = useState<string>(EXAMPLES[0]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+  const go = (p: Page) => (e: React.MouseEvent) => { e.preventDefault(); setPage(p); window.scrollTo(0, 0); closeMenu(); };
 
   const scrollTo = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
     setPage("examples");
+    closeMenu();
     setTimeout(() => {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 50);
   };
 
+  useEffect(() => {
+    if (page !== "examples") return;
+    const sections = EXAMPLES.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if (!sections.length) return;
+    const obs = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (e.isIntersecting) { setActiveExample(e.target.id); break; }
+      }
+    }, { rootMargin: "-20% 0px -60% 0px" });
+    sections.forEach(s => obs.observe(s));
+    return () => obs.disconnect();
+  }, [page]);
+
   return (
     <Spektr>
+      <button className="menu-btn" aria-label="Menu" onClick={() => setMenuOpen(!menuOpen)}>
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div className={`mobile-backdrop${menuOpen ? " open" : ""}`} onClick={closeMenu} />
       <div style={S.shell}>
-        <nav style={S.sidebar}>
+        <nav style={S.sidebar} className={`mobile-sidebar${menuOpen ? " open" : ""}`}>
           <div style={S.sidebarInner}>
             <a href="#" onClick={go("getting-started")} style={S.brand}>Spektr</a>
             <p style={S.byline}>by <a href="https://antoshkin.tech" target="_blank" rel="noopener" style={S.bylineLink}>Andrew Antoshkin</a></p>
@@ -32,7 +53,7 @@ export function App() {
             <div style={S.navSection}>
               <p style={S.navLabel}>Examples</p>
               {EXAMPLES.map(ex => (
-                <a key={ex} href="#" onClick={scrollTo(ex)} style={page === "examples" ? S.navItem : S.navItem}>{ex}</a>
+                <a key={ex} href="#" onClick={scrollTo(ex)} style={page === "examples" && activeExample === ex ? S.navActive : S.navItem}>{ex}</a>
               ))}
             </div>
             <div style={S.navSection}>
@@ -43,7 +64,7 @@ export function App() {
           </div>
           <code style={S.sidebarInstall}>npm i @andrewaitken/spektr</code>
         </nav>
-        <div style={{ width: 240, flexShrink: 0 }} />
+        <div className="spacer-col" style={{ width: 240, flexShrink: 0 }} />
         <main style={S.main}>
           <article style={S.article}>
             {page === "getting-started" && <GettingStarted onNext={go("api")} />}
