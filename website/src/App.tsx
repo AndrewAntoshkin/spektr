@@ -36,12 +36,12 @@ export function App() {
 
   return (
     <Spektr>
+      <button className={`menu-btn${menuOpen ? " open" : ""}`} aria-label="Menu" onClick={() => setMenuOpen(!menuOpen)}>
+        <svg viewBox="0 0 24 24"><line className="line1" x1="3" y1="6" x2="21" y2="6"/><line className="line2" x1="3" y1="12" x2="21" y2="12"/><line className="line3" x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <div className={`mobile-backdrop${menuOpen ? " open" : ""}`} onClick={closeMenu} />
       <div style={S.shell}>
         <nav style={S.sidebar} className={`mobile-sidebar${menuOpen ? " open" : ""}`}>
-          <button className="menu-btn" aria-label="Menu" onClick={() => setMenuOpen(!menuOpen)}>
-            <svg viewBox="0 0 24 24"><line className="line1" x1="3" y1="6" x2="21" y2="6"/><line className="line2" x1="3" y1="12" x2="21" y2="12"/><line className="line3" x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
           <div style={S.sidebarInner}>
             <a href="#" onClick={go("getting-started")} style={S.brand}>Spektr</a>
             <p style={S.byline}>by <a href="https://antoshkin.tech" target="_blank" rel="noopener" style={S.bylineLink}>Andrew Antoshkin</a></p>
