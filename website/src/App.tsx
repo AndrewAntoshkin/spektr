@@ -550,7 +550,7 @@ const S: Record<string, React.CSSProperties> = {
     overflowY: "auto",
   },
   sidebarInner: { flex: 1 },
-  brandRow: { display: "flex", alignItems: "center", gap: 8 },
+  brandRow: { display: "flex", alignItems: "center", gap: 8, marginBottom: 24 },
   backBtn: { display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, border: "1px solid #444", borderRadius: 4, background: "transparent", color: "#e5e5e5", textDecoration: "none", flexShrink: 0 },
   brand: { fontSize: 14, fontWeight: 500, color: "#e5e5e5", textDecoration: "none", display: "block" },
   sidebarLink: { fontSize: 12, color: "#555", textDecoration: "none" },
