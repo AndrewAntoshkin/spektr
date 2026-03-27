@@ -47,7 +47,6 @@ export function App() {
               <a href="https://antoshkin.tech" style={S.backBtn} aria-label="Back"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg></a>
               <a href="#" onClick={go("getting-started")} style={S.brand}>Spektr</a>
             </div>
-            <p style={S.byline}>by <a href="https://antoshkin.tech" target="_blank" rel="noopener" style={S.bylineLink}>Andrew Antoshkin</a></p>
             <div style={S.navSection}>
               <p style={S.navLabel}>Basics</p>
               <a href="#" onClick={go("getting-started")} style={page === "getting-started" ? S.navActive : S.navItem}>Getting Started</a>
@@ -65,7 +64,7 @@ export function App() {
               <a href="https://www.npmjs.com/package/@andrewaitken/spektr" target="_blank" rel="noopener" style={S.navItem}>npm</a>
             </div>
           </div>
-          <code style={S.sidebarInstall}>npm i @andrewaitken/spektr</code>
+          <a href="https://antoshkin.tech" target="_blank" rel="noopener" style={S.sidebarLink}>antoshkin.tech</a>
         </nav>
         <div className="spacer-col" style={{ width: 240, flexShrink: 0 }} />
         <main style={S.main}>
@@ -554,8 +553,7 @@ const S: Record<string, React.CSSProperties> = {
   brandRow: { display: "flex", alignItems: "center", gap: 8 },
   backBtn: { display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, border: "1px solid #444", borderRadius: 4, background: "transparent", color: "#e5e5e5", textDecoration: "none", flexShrink: 0 },
   brand: { fontSize: 14, fontWeight: 500, color: "#e5e5e5", textDecoration: "none", display: "block" },
-  byline: { fontSize: 12, color: "#6b6b6b", marginBottom: 24, marginTop: 1 },
-  bylineLink: { color: "#888", textDecoration: "none" },
+  sidebarLink: { fontSize: 12, color: "#555", textDecoration: "none" },
   navSection: { marginBottom: 16 },
   navLabel: { fontSize: 11, fontWeight: 500, color: "#6b6b6b", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 },
   navItem: { display: "block", fontSize: 13, fontWeight: 500, color: "#a1a1aa", textDecoration: "none", padding: "5px 8px", borderRadius: 6, marginLeft: -8 },
