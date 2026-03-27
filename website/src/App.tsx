@@ -36,12 +36,12 @@ export function App() {
 
   return (
     <Spektr>
-      <button className="menu-btn" aria-label="Menu" onClick={() => setMenuOpen(!menuOpen)}>
-        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
       <div className={`mobile-backdrop${menuOpen ? " open" : ""}`} onClick={closeMenu} />
       <div style={S.shell}>
         <nav style={S.sidebar} className={`mobile-sidebar${menuOpen ? " open" : ""}`}>
+          <button className="menu-btn" aria-label="Menu" onClick={() => setMenuOpen(!menuOpen)}>
+            <svg viewBox="0 0 24 24"><line className="line1" x1="3" y1="6" x2="21" y2="6"/><line className="line2" x1="3" y1="12" x2="21" y2="12"/><line className="line3" x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
           <div style={S.sidebarInner}>
             <a href="#" onClick={go("getting-started")} style={S.brand}>Spektr</a>
             <p style={S.byline}>by <a href="https://antoshkin.tech" target="_blank" rel="noopener" style={S.bylineLink}>Andrew Antoshkin</a></p>
@@ -560,18 +560,18 @@ const S: Record<string, React.CSSProperties> = {
   main: { flex: 1, display: "flex", justifyContent: "center", padding: "64px 32px 80px" },
   article: { maxWidth: 672, width: "100%" },
 
-  h1: { fontSize: 32, fontWeight: 600, color: "#e5e5e5", letterSpacing: "-0.03em", marginBottom: 12 },
-  lead: { fontSize: 16, color: "#a1a1aa", lineHeight: "1.6", marginBottom: 40 },
-  h2: { fontSize: 20, fontWeight: 600, color: "#e5e5e5", letterSpacing: "-0.03em", marginBottom: 12 },
-  body: { fontSize: 16, color: "#a1a1aa", lineHeight: "1.6", marginBottom: 16 },
-  kbd: { display: "inline-block", padding: "1px 5px", fontSize: 12, fontFamily: "ui-monospace, SFMono-Regular, monospace", background: "#2a2a29", border: "1px solid #3a3a39", borderRadius: 4, color: "#d4d4d4" },
-  ic: { fontSize: 14, fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', background: "#2a2a29", border: "1px solid #333", borderRadius: 6, padding: "2px 4px", color: "#d4d4d4" },
+  h1: { fontSize: 24, fontWeight: 600, color: "#e5e5e5", letterSpacing: "-0.03em", marginBottom: 10 },
+  lead: { fontSize: 14, color: "#a1a1aa", lineHeight: "1.6", marginBottom: 32 },
+  h2: { fontSize: 18, fontWeight: 600, color: "#e5e5e5", letterSpacing: "-0.03em", marginBottom: 10 },
+  body: { fontSize: 14, color: "#a1a1aa", lineHeight: "1.6", marginBottom: 14 },
+  kbd: { display: "inline-block", padding: "1px 5px", fontSize: 11, fontFamily: "ui-monospace, SFMono-Regular, monospace", background: "#2a2a29", border: "1px solid #3a3a39", borderRadius: 4, color: "#d4d4d4" },
+  ic: { fontSize: 12.5, fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', background: "#2a2a29", border: "1px solid #333", borderRadius: 5, padding: "1px 4px", color: "#d4d4d4" },
   section: { marginBottom: 48, scrollMarginTop: 32 },
 
   codeWrap: { background: "#212121", border: "1px solid #2f2f2e", borderRadius: 10, overflow: "hidden" },
-  pre: { margin: 0, padding: "16px 20px", fontSize: 13, fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', color: "#a1a1aa", lineHeight: "1.7", overflowX: "auto" },
+  pre: { margin: 0, padding: "14px 16px", fontSize: 12.5, fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace', color: "#a1a1aa", lineHeight: "1.6", overflowX: "auto" },
 
-  preview: { background: "#212121", border: "1px solid #2f2f2e", borderRadius: 10, padding: 32, display: "flex", justifyContent: "center", marginBottom: 16 },
+  preview: { background: "#212121", border: "1px solid #2f2f2e", borderRadius: 10, padding: 24, display: "flex", justifyContent: "center", marginBottom: 14 },
 
   label: { fontSize: 13, color: "#a1a1aa", display: "block", marginBottom: 6, fontWeight: 500 },
   input: { padding: "8px 12px", fontSize: 13, fontFamily: "inherit", background: "#171716", color: "#d4d4d4", border: "1px solid #3a3a39", borderRadius: 8, outline: "none", width: "100%" },
